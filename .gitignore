@@ -1,0 +1,8 @@
+.char*
+chstr
+modules.order 
+.tmp_versions 
+charops.o
+charstr.o
+a.out
+.gdb_history
