@@ -1,7 +1,5 @@
 #include  <stdio.h> 
 #include  <stdlib.h>  
-#include  <string.h> 
-
 #include  "charops.h"
 
 /**
@@ -34,7 +32,7 @@ char_strcpy(char * str_dest , const char * str_source) {
     // check the size str_dest in enought to get the contains
     // of str_source
     if ( !char_strlen(str_dest) >= char_strlen(str_source)) {
-        fprintf (stderr , "failed  to copy contain  %c", 0xa) ; 
+        fprintf(stderr , "failed  to copy contain  %c", 0xa) ; 
         perror("not enough  size"); 
         exit(EXIT_FAILURE);  
     }
@@ -46,12 +44,18 @@ char_strcpy(char * str_dest , const char * str_source) {
     return   str_dest ;      
 }
 
-// create a concatenate function  
+/*!  
+ * char_strcat 
+ * concatenate char 
+ * @param char  * destination 
+ * @param const char * source 
+ * @return char 
+ */
 extern char *
 char_strcat (char * str_dest_cat , const  char * str_src_cat )  {
 
    int endless_pos = 0 ; 
-   char endpoint = 0 ; 
+   char endpoint   = 0 ; 
    do  {
        endpoint =  str_dest_cat[endless_pos] ; 
        endless_pos++ ; 
@@ -66,33 +70,37 @@ char_strcat (char * str_dest_cat , const  char * str_src_cat )  {
    
    return  str_dest_cat ; 
 }
+
 /* char_strcmp 
- * compare two string 
+ * compare two strings
  * if they are identical  it return 0 
  * otherwise  it return 1 
  */
 extern int
 char_strcmp(const  char* char_str1 , const char * char_str2  ) {
-    int  strcmp = 0 ; 
     
-    for ( int char_=0 ; char_ < char_strlen( char_str2)  ; char_++)  {
+    int  strcmp_status = 0 ; 
+    for (int char_=0 ; char_ < char_strlen( char_str2)  ; char_++)  {
 
          if (char_str1[char_]  !=  char_str2[char_]) { 
-            strcmp = 1  ; 
+            strcmp_status = 1  ; 
             break ; 
          }  
         
     }
 
-    return  strcmp ; 
+    return  strcmp_status ; 
 }
 
 
 /* char_strrch 
  * research a char in a string  
  * on  success  it return a address of the  
- *  charater founded  
+ * charater founded  
  * on fail it return NULL 
+ * @param  const char * char_string  
+ * @param  char character  
+ * @return char* 
  */ 
 extern char* 
 char_strrch(const char * char_str , char character)  {    
@@ -107,18 +115,22 @@ char_strrch(const char * char_str , char character)  {
             break  ;            
         }
     }
-
-    return char_str_args;
+    
+    return char_str_args != NULL ?  char_str_args  : NULL ; 
 }
 
 /**
  * char_strbrk 
- * research  the first occurence founded  in string or char of array  
- */
+ * research  the first occurence founded  in string
+ * return NULL on fail 
+ * @param const char * 
+ * @param const char *  
+ * @return  char * 
+ **/
 extern char *
 char_strbrk ( const char * char_str  , const char  * word_string)  {
     
-    char  char_breaker = 0 ;  
+    char  char_breaker       = 0    ;  
     char *char_breaker_index = NULL ; 
 
     for (  int i = 0 ;  i < char_strlen (char_str ) ;  i++ )  { 
@@ -129,15 +141,22 @@ char_strbrk ( const char * char_str  , const char  * word_string)  {
         }    
     }
 
-    return  char_breaker_index ;
+    return  char_breaker_index != NULL ?  char_breaker_index : NULL ;  
 }
 
+/*! 
+ * char_strstr 
+ * reach  a word  into  a string 
+ * @param  const char * charstring 
+ * @param  const char * word   
+ * @return char *
+ */
 extern char *  
 char_strstr  (const char * char_str ,  char const *  word )  { 
      
     int  word_size =  char_strlen(word) , size_watcher = 0   ;
     int status = 0 ;  
-    char char_contains[0x03E8] ; //  1000    
+    char char_contains[MAX_CHAR_BUFFER] ;  
     
     int    i=0 , j=0 ; 
     while (  size_watcher <= word_size )  {
@@ -155,10 +174,7 @@ char_strstr  (const char * char_str ,  char const *  word )  {
     if (size_watcher ==  word_size) {      
         for  ( int char_ =0  ;  char_ < size_watcher ; char_++ ) 
               char_contains[char_] =  word[char_] ;  
-    }else  status = 1 ;  
-
-    printf(" sd %d \n " ,  size_watcher) ;
-    printf(" w  %s \n " ,  char_contains) ;
+    }else  status = 1 ;   
     
     return   status  == 0 ? char_contains : NULL; 
 }
