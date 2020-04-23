@@ -7,12 +7,13 @@
  
 #define   MAX_CHAR_BUFFER  0X03E8 
 
+
 /*!
  * char_strlen : calculate the length of the string
  * @params const char  *
  * @return  int
  */
-extern int   char_strlen (const char *)                ; 
+extern size_t  char_strlen (const char *)                ; 
 
 
 /*!
@@ -52,7 +53,7 @@ extern int   char_strcmp (const char * , const char *) ;
  * @param  char character
  * @return char*
  */
-extern char *char_strrch (const char * , char)         ; 
+extern char *char_strrch (char * , char)         ; 
 
 /*!
  * char_strbrk
@@ -62,7 +63,7 @@ extern char *char_strrch (const char * , char)         ;
  * @param const char *
  * @return  char *
  **/
-extern char *char_strbrk (const char * , const char *) ;
+extern char *char_strbrk (char * ,char *) ;
 
 /*!
  * char_strstr
@@ -71,6 +72,6 @@ extern char *char_strbrk (const char * , const char *) ;
  * @param  const char * word
  * @return char *
  */
-extern char *char_strstr (const char * ,const char *)  ;  
+extern char *char_strstr (char * ,char *)  ;  
 
 #endif 
