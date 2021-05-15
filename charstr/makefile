@@ -1,24 +1,22 @@
 #!/usr/bin/make 
 
 CC = gcc
-CC_OUTPUT= -o  
-CFLAGS = -std=c99 -I -Wextra 
+CFLAGS = -std=c99 -I -Wextra  -O2   -Wall   
 exec = chstr 
-SRC = $(wildcard * .c)  
+HEADERS=$(wildcard  includes/*.h)  
+SRC = $(wildcard *.c)  
 OBJ = $(SRC:.c=.o) 
 
 all : $(exec)
 
-$(exec) : charstr.o charops.o
+$(exec) : $(OBJ)  
 	${CC} -o $@ $^  ${CFLAGS} 
 	
-charstr.o : charops.h
+charstr.o : $(HEADERS)  
 
 %.o :  %.c
 	$(CC)  -o  $@ -c  $<  $(CFLAGS) 
 
-debug : charstr.c charops.c	
-	$(CC) -g  $^ $(CFLAGS) -v 
 
 .PHONY : clean  mproper 
 
@@ -26,4 +24,4 @@ clean :
 	rm *.o
 
 mproper: clean 
-	rm  $(exec)  a.out 
+	rm  $(exec) 

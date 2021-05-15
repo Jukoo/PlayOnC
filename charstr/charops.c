@@ -1,5 +1,8 @@
+#include  <stdlib.h>
+#include  <stdio.h> 
 #include  <stddef.h> 
-#include  "charops.h"
+
+#include  "includes/charops.h"
 
 /**
  * char_strlen  
@@ -43,16 +46,20 @@ char_strcpy(char * str_dest , const char * str_source) {
  */
 extern char *
 char_strcat (char * str_dest_cat , const  char * str_src_cat )  {
-    
-    for(;*str_src_cat!='\0';str_dest_cat++) 
-    {
-        if (*str_dest_cat  == '\0') 
-        {   
-            *str_dest_cat = *str_src_cat;
-            str_src_cat++ ; 
-        }     
+   
+    if (  sizeof(str_dest_cat) >= char_strlen(str_src_cat) ) 
+    {              
+        fprintf(stderr ,  "Core dumped at  <%p>\n", str_dest_cat ) ; 
+        return  (void*)0 ; 
     }
-    
+    char  *endpoint  =  ( str_dest_cat  +  char_strlen(str_dest_cat)) ;  
+
+    while  ( *str_src_cat != 0  )  
+    {
+        *endpoint  =   *str_src_cat  ;  
+        str_src_cat++  , endpoint++ ; 
+    }
+     
     return  str_dest_cat ; 
 }
 
@@ -64,16 +71,11 @@ char_strcat (char * str_dest_cat , const  char * str_src_cat )  {
 extern int
 char_strcmp(const  char* char_str1 , const char * char_str2  ) {
     
-    if(char_strlen(char_str1) != char_strlen(char_str2)  ) return 1  ; 
-    int cmp_status =  0 ; 
     for ( ;*char_str1 !='\0'; char_str1++ , char_str2++) 
-        if( *char_str1 !=  *char_str2) 
-        {
-            cmp_status =1 ;  
-            break ; 
-        }
+        if( *char_str1 !=  *char_str2)  
+           return  EXIT_FAILURE  ;  
 
-    return  cmp_status ; 
+    return  EXIT_SUCCESS ; 
 }
 
 
