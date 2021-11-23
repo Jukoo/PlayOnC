@@ -1,20 +1,22 @@
 #!/usr/bin/make  
 
-export CC = gcc 
-export   CFLAGS  = -std=c99  -I  -Wextra  -Wall  -O2 
-exec  =  charstr/chstr  
+export   CC = cc 
+export   CFLAGS  = -std=c99  -I  -Wextra  -Wall  -O2 -pedantic 
 
+source_dir :=  libstring
+exec_name  :=  string 
+exec = $(source_dir)/$(exec_name)  
 
 all   : $(exec)  
 
 $(exec) :  
-	@(cd charstr   &&  $(MAKE))  
+	@(cd $(source_dir)   &&  $(MAKE))  
 
 
 .PHONY  : clean   mproper $(exec) 
 
 clean  :  
-	@(cd charstr  && $(MAKE) $@) 
+	@(cd $(source_dir)   && $(MAKE) $@) 
 
 mproper : 
-	@(cd  charstr  && $(MAKE) $@ )   
+	@(cd  $(source_dir)  && $(MAKE) $@ )   

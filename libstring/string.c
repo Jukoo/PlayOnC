@@ -1,8 +1,9 @@
 #include  <stdlib.h>
 #include  <stdio.h> 
 #include  <stddef.h> 
+#include  <assert.h> 
 
-#include  "includes/charops.h"
+#include  "head/string.h"
 
 /**
  * char_strlen  
@@ -10,11 +11,14 @@
  * @params const char  *  
  * @return  int 
  */ 
-extern size_t  
-char_strlen (const char * charstr) {
-    int  i = 0  ; 
-    for (;*charstr!='\0' ;charstr++ ,  i++ ) ; 
-    return i  ; 
+ 
+extern size_t 
+char_strlen (const char * source_string) {
+    
+    char *str_start_point   = (char* ) source_string ;  
+    while ( *++source_string) ; 
+
+    return source_string - str_start_point;  
 }
 
 /**
@@ -25,16 +29,13 @@ char_strlen (const char * charstr) {
  * @return  char*
  */
 extern char *
-char_strcpy(char * str_dest , const char * str_source) {
+char_strcpy(char * dest_string  , const char * source_string) {
 
-    size_t  word  = 0 ; 
-    while ( *str_source != '\0') 
+    while (*source_string) 
     {
-        str_dest[word]  = *str_source ; 
-        word++ ; 
-        str_source++ ; 
+          *dest_string++= *source_string++; 
     }
-    return  str_dest ;     
+    return  dest_string ;      
 }
 
 /*!  
@@ -45,22 +46,18 @@ char_strcpy(char * str_dest , const char * str_source) {
  * @return char 
  */
 extern char *
-char_strcat (char * str_dest_cat , const  char * str_src_cat )  {
-   
-    if (  sizeof(str_dest_cat) >= char_strlen(str_src_cat) ) 
-    {              
-        fprintf(stderr ,  "Core dumped at  <%p>\n", str_dest_cat ) ; 
-        return  (void*)0 ; 
-    }
-    char  *endpoint  =  ( str_dest_cat  +  char_strlen(str_dest_cat)) ;  
+char_strcat (char * dest_string_concat , const  char * source_string )  {
+ 
+     
+    char  *dest_string_endpoint =   (dest_string_concat   +  char_strlen(dest_string_concat) ) ;  
 
-    while  ( *str_src_cat != 0  )  
+    while  ( *source_string)   
     {
-        *endpoint  =   *str_src_cat  ;  
-        str_src_cat++  , endpoint++ ; 
+        *dest_string_endpoint = *source_string++ ;  
+        dest_string_endpoint++ ; 
     }
      
-    return  str_dest_cat ; 
+    return  dest_string_concat ; 
 }
 
 /* char_strcmp 
@@ -69,13 +66,20 @@ char_strcat (char * str_dest_cat , const  char * str_src_cat )  {
  * otherwise  it return 1 
  */
 extern int
-char_strcmp(const  char* char_str1 , const char * char_str2  ) {
+char_strcmp(const  char* source_string1 , const char * source_string2  ) {
     
-    for ( ;*char_str1 !='\0'; char_str1++ , char_str2++) 
-        if( *char_str1 !=  *char_str2)  
-           return  EXIT_FAILURE  ;  
+    while(*source_string1)
+    { 
+        if (*source_string1++ !=  *source_string2++) 
+        {
+            return   *source_string1 >  *source_string2  ? \
+                     *source_string1 -  *source_string2  : \
+                     *source_string2 -  *source_string1; 
+        }        
+    
+    }
 
-    return  EXIT_SUCCESS ; 
+    return   0 ; 
 }
 
 

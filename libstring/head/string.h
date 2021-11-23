@@ -1,6 +1,5 @@
-#ifndef  CHAR_OPS
-#define  CHAR_OPS
-
+#if !defined  CHARSTRING_H  
+#define       CHARSTRING_H
 
 #define  ECHO_S(words , argstr) fprintf(stdout ,"%s  %s  - >  Line  %d  %c" , words, argstr, __LINE__,0x00a )
 #define  ECHO_I(words , argint) fprintf(stdout ,"%s  %d  - >  Line  %d  %c" , words, argint, __LINE__,0x00a )
@@ -13,7 +12,7 @@
  * @params const char  *
  * @return  int
  */
-extern size_t  char_strlen (const char *)                ; 
+extern size_t  char_strlen (const char * __source_string)  ; 
 
 
 /*!
@@ -23,7 +22,7 @@ extern size_t  char_strlen (const char *)                ;
  * @param  const char  source 
  * @return  char*
  */
-extern char *char_strcpy (char * , const char  *)      ; 
+extern char *char_strcpy (char *__dest_string   , const char  * __source_string)  ; 
 
 /*!
  * char_strcat
@@ -32,7 +31,7 @@ extern char *char_strcpy (char * , const char  *)      ;
  * @param const char * source
  * @return char
  */
-extern char *char_strcat (char * , const char  *)      ;
+extern char *char_strcat (char *__dest_string_to_concat , const char  *__source_string)      ;
 
 /*!
  * char_strcmp 
@@ -40,7 +39,7 @@ extern char *char_strcat (char * , const char  *)      ;
  * if they are identical  it return 0 
  * otherwise  it return 1 
  */
-extern int   char_strcmp (const char * , const char *) ; 
+extern int   char_strcmp (const char *__source_string1 , const char * __source_string2) ; 
 
 
 /*!

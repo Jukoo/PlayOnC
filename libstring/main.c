@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h> 
-#include <string.h> 
  
-#include "includes/charops.h"
+#include "head/string.h"
 
 
 int main  (int argc ,  char ** argv) {
     
-    char *my_char_variable =  "no idea what im doing"  ;  
+    char *my_char_variable ="junior"  ;  
     
     // test of char_strlen  
     int size = char_strlen(my_char_variable) ; 
@@ -28,7 +27,7 @@ int main  (int argc ,  char ** argv) {
     //fprintf(stdout , "concatenat -> %s \n" , concate_char_variable) ;
 
     // test of  char_strcmp 
-    char  word1[100] = "hey" , word2[]="hey" ; 
+    char  word1[100] = "hey" , word2[]="how" ; 
 
     int compare_status  =  char_strcmp (word1 , word2)  ;  
     fprintf(stdout , "compare status %d  line %d \n " ,  compare_status, __LINE__) ;
