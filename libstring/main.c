@@ -27,7 +27,7 @@ int main  (int argc ,  char ** argv) {
     //fprintf(stdout , "concatenat -> %s \n" , concate_char_variable) ;
 
     // test of  char_strcmp 
-    char  word1[100] = "hey" , word2[]="how" ; 
+    char  word1[100] = "hey" , word2[]="hey" ; 
 
     int compare_status  =  char_strcmp (word1 , word2)  ;  
     fprintf(stdout , "compare status %d  line %d \n " ,  compare_status, __LINE__) ;
@@ -43,7 +43,7 @@ int main  (int argc ,  char ** argv) {
     
     // test of char_strbrk 
     char *charbrk=  NULL  ; 
-    charbrk = char_strbrk("salut" ,  "slx")  ; 
+    charbrk = char_strbrk("salut" ,  "slt")  ; 
     if(charbrk != NULL)
         fprintf(stdout ,  "string char found  :%s \n" ,  charbrk) ; 
     else 
@@ -55,7 +55,7 @@ int main  (int argc ,  char ** argv) {
 
    char  *strstr_status = char_strstr(text , test) ;  
    
-   fprintf(stdout  , "status code  char_strstr  : %d \n" , strstr_status) ; 
+   fprintf(stdout  , "status code  char_strstr  : %p \n" , strstr_status) ; 
    fprintf(stdout  , "strstr_status value       : %s  \n" , strstr_status) ; 
    
     

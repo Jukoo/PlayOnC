@@ -76,7 +76,6 @@ char_strcmp(const  char* source_string1 , const char * source_string2  ) {
                      *source_string1 -  *source_string2  : \
                      *source_string2 -  *source_string1; 
         }        
-    
     }
 
     return   0 ; 
@@ -93,11 +92,14 @@ char_strcmp(const  char* source_string1 , const char * source_string2  ) {
  * @return char* 
  */ 
 extern char* 
-char_strrch(char * char_str , char character)  {
+char_strrch(char * source_string   , char character)  {
     
-    for(;*char_str != '\0'; char_str++ )  
-        if (  *char_str  == character )  
-            return  char_str ; 
+    while(*source_string)
+    {
+        if  ( *source_string   == character )  
+            return  source_string ; 
+        source_string++ ; 
+    } 
 
     return (void*) 0 ; ; 
 }
@@ -111,12 +113,22 @@ char_strrch(char * char_str , char character)  {
  * @return  char * 
  **/
 extern char *
-char_strbrk ( char * char_str  , char  * word_string)  {
+char_strbrk (char * source_string   , char  * term_occurence  )  {
 
-    for(size_t w_pos = 0  ;*word_string !='\0' ; char_str++ , word_string++,w_pos++)
-        if( *char_str  == *word_string)  
-            return   &char_str[w_pos];
+   char *clone_source_string  = source_string ;  
 
+   while ( *term_occurence)  
+   { 
+        
+        if ( *term_occurence  ==   *source_string) 
+            return  term_occurence; 
+        
+        if  (*source_string)  source_string++;  
+        else  {
+             source_string =  clone_source_string ;  
+             term_occurence++ ;  
+        }
+   }
    return (void *) 0 ; 
 }
 
@@ -124,20 +136,29 @@ char_strbrk ( char * char_str  , char  * word_string)  {
  * char_strstr 
  * reach  a word  into  a string 
  * @param  const char * charstring 
+
  * @param  const char * word   
  * @return char *
  */
 extern char *  
-char_strstr  (char * char_str ,  char *  word )  { 
+char_strstr  (char *  haystack  ,  char *   needle )  { 
+    
+    char  *save_needle =  needle; 
 
-    size_t  w_len  = char_strlen(word) , i = 0 ;  
-    while( *char_str !=  '\0')
+
+    size_t  needle_size =  char_strlen(needle)  ; 
+    int  i = 0 ; 
+    while ( *haystack && *needle)  
     {
-        if ( *char_str  ==  word[i] ) i++ ; 
-        else  i=0 ; 
-        if ( i == w_len) return word  ;  
-        char_str++ ; 
+       if (*haystack  == *needle)
+       {
+          needle++;  
+          if (!*needle) return  save_needle ; 
+
+       }else  needle = save_needle ; 
+
+       haystack++ ;  
     }
-   
-    return   (void *) 0 ; 
+    
+    return   ( void *) 0 ; 
 }
