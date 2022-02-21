@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h> 
  
-#include "head/string.h"
+#include "include/string.h"
 
 
 int main  (int argc ,  char ** argv) {
@@ -51,7 +51,7 @@ int main  (int argc ,  char ** argv) {
 
    
    // test  of char_strstr 
-   char  text[] = "this is a test" , test[] ="test"  ; 
+   char  text[] = "this is test for fun " , test[] ="test"  ; 
 
    char  *strstr_status = char_strstr(text , test) ;  
    

@@ -6,3 +6,5 @@ charops.o
 charstr.o
 a.out
 .gdb_history
+libstring/*.o
+libstring/string

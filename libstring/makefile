@@ -3,7 +3,7 @@
 CC     =  cc  
 CFLAGS = -std=c99 -I -Wextra  -O2   -Wall  -pedantic  
 exec   = string
-default_header:= head 
+default_header:= include 
 
 HEADERS=$(wildcard  $(default_header)/*.h)  
 SRC = $(wildcard *.c)  

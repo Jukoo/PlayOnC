@@ -52,7 +52,7 @@ extern int   char_strcmp (const char *__source_string1 , const char * __source_s
  * @param  char character
  * @return char*
  */
-extern char *char_strrch (char *__source_string  , char  __character)         ; 
+extern char *char_strrch (const  char *__source_string  , const char  __character)         ; 
     
 
 /*!
@@ -63,7 +63,7 @@ extern char *char_strrch (char *__source_string  , char  __character)         ;
  * @param const char *
  * @return  char *
  **/
-extern char *char_strbrk (char *  __source_string ,char *__term_occurence) ;
+extern char *char_strbrk (const  char *  __source_string , const char *__term_occurence) ;
 
 /*!
  * char_strstr
@@ -72,6 +72,6 @@ extern char *char_strbrk (char *  __source_string ,char *__term_occurence) ;
  * @param  const char * word
  * @return char *
  */
-extern char *char_strstr (char * __source_string  ,char * __needle)  ;  
+extern char *char_strstr (const char * __source_string  ,const char * __needle)  ;  
 
 #endif 

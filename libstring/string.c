@@ -3,7 +3,7 @@
 #include  <stddef.h> 
 #include  <assert.h> 
 
-#include  "head/string.h"
+#include  "include/string.h"
 
 /**
  * char_strlen  
@@ -35,6 +35,8 @@ char_strcpy(char * dest_string  , const char * source_string) {
     {
           *dest_string++= *source_string++; 
     }
+    *dest_string++ = 0 ; 
+
     return  dest_string ;      
 }
 
@@ -48,16 +50,14 @@ char_strcpy(char * dest_string  , const char * source_string) {
 extern char *
 char_strcat (char * dest_string_concat , const  char * source_string )  {
  
-     
-    char  *dest_string_endpoint =   (dest_string_concat   +  char_strlen(dest_string_concat) ) ;  
 
-    while  ( *source_string)   
-    {
-        *dest_string_endpoint = *source_string++ ;  
-        dest_string_endpoint++ ; 
-    }
-     
+    while  ( *++dest_string_concat )  ;  
+    while  ( *source_string ) *dest_string_concat++=*source_string++ ;
+    
+    *dest_string_concat++=0 ; 
+    
     return  dest_string_concat ; 
+
 }
 
 /* char_strcmp 
@@ -92,13 +92,14 @@ char_strcmp(const  char* source_string1 , const char * source_string2  ) {
  * @return char* 
  */ 
 extern char* 
-char_strrch(char * source_string   , char character)  {
+char_strrch(const  char * source_string   , char character)  {
     
-    while(*source_string)
+    char *strsrc  = (char *) source_string  ; 
+    while(*strsrc)
     {
-        if  ( *source_string   == character )  
-            return  source_string ; 
-        source_string++ ; 
+        if  ( *strsrc++ == character )  
+            return  strsrc ;  
+    
     } 
 
     return (void*) 0 ; ; 
@@ -113,22 +114,26 @@ char_strrch(char * source_string   , char character)  {
  * @return  char * 
  **/
 extern char *
-char_strbrk (char * source_string   , char  * term_occurence  )  {
+char_strbrk (const  char * source_string   , const  char  * term_occurence  )  {
 
-   char *clone_source_string  = source_string ;  
+   char *clone_source_string  = (char * ) source_string ;  
 
    while ( *term_occurence)  
    { 
         
         if ( *term_occurence  ==   *source_string) 
-            return  term_occurence; 
+            return  (char *) term_occurence; 
         
-        if  (*source_string)  source_string++;  
-        else  {
+        if  (!*source_string ) 
+        {
              source_string =  clone_source_string ;  
              term_occurence++ ;  
         }
+        
+        source_string++ ; 
+
    }
+
    return (void *) 0 ; 
 }
 
@@ -141,21 +146,27 @@ char_strbrk (char * source_string   , char  * term_occurence  )  {
  * @return char *
  */
 extern char *  
-char_strstr  (char *  haystack  ,  char *   needle )  { 
+char_strstr  (const char *  haystack  ,  const  char *   needle )  { 
     
-    char  *save_needle =  needle; 
+    char  *n_start  =  (char *)  needle; 
 
+    size_t match=  0 ; 
 
-    size_t  needle_size =  char_strlen(needle)  ; 
-    int  i = 0 ; 
-    while ( *haystack && *needle)  
+    while ( *haystack )  
     {
        if (*haystack  == *needle)
        {
-          needle++;  
-          if (!*needle) return  save_needle ; 
+          needle++; match++;  
+          if (!*needle)  
+          {
+              match++ ;
+              size_t  needle_length =  needle - n_start ;
+              if ( needle_length ==  match )    
+                 return  ( char * ) haystack - needle_length ; 
+             
+          } 
 
-       }else  needle = save_needle ; 
+       }else  match= 0 ; 
 
        haystack++ ;  
     }
