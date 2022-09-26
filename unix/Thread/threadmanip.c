@@ -84,17 +84,16 @@ extern int counter  = 0 ;
 
 THRD_CLOCK_TIME  void *  thrd_time_counter ( void * args )   {
     
-    fprintf(stdout , "start counting \n") ; 
+      
     while ( counter <  0x64 )
     {
         counter++  ; 
         printf("%i\n",counter) ;  
         if ( counter ==  RESET_AT )  
         {
-            fprintf(stdout , "trigger the signal \n" ) ; 
-            pthread_mutex_lock(&mutex )   ;  
-            pthread_cond_signal(&cond)   ; 
-            pthread_mutex_unlock(&mutex) ;  
+            pthread_mutex_lock(&((ThreadContext *)args)->mutex_hdl)  ;  
+            pthread_cond_signal(&((ThreadContext*)args)->cond_hdl )  ; 
+            pthread_mutex_unlock(&((ThreadContext*)args)->mutex_hdl) ;   
            
         } 
 
@@ -108,13 +107,13 @@ THRD_CLOCK_TIME  void *   thrd_reset(void *  args )  {
     
      
     while (1) 
-    {   puts("waiting for signal ");
+    {   ;
 
-        pthread_mutex_lock(&mutex)   ;  
-        pthread_cond_wait(&cond  ,  &mutex) ;  
+        pthread_mutex_lock(&((ThreadContext*)args)->mutex_hdl)   ;  
+        pthread_cond_wait(&((ThreadContext *)args)->cond_hdl   ,  &((ThreadContext *)args)->mutex_hdl) ;  
         fprintf(stdout , "resting counter \n")  ; 
         counter= 0 ;  
-        pthread_mutex_unlock(&mutex); 
+        pthread_mutex_unlock(&((ThreadContext *)args)->mutex_hdl) ; 
         puts("releasing ... ") ; 
 
     }

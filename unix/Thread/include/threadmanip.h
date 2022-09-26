@@ -1,7 +1,6 @@
 #ifndef  __thread_manipulation  
 #define  __thread_manipulation 
 
-#include  <pthread.h> 
 
 
 typedef struct  ThreadManager   {
@@ -43,8 +42,16 @@ THRD_HDL_STDIN  void * thread_catch_stdin( void  *)  ;
 
 
 #ifdef  THRD_CLOCK_TIME 
-#define THRD_CLOCK_TIME  
-#define RESET_AT  3  
+#define THRD_CLOCK_TIME 
+
+#ifndef RESET_AT  
+#define RESET_AT  3 
+#endif 
+
+#ifndef LIMIT_COUNTER  
+#define LIMIT_COUNTER 0x64 
+#endif 
+
 extern int counter  ; 
 
 extern  pthread_mutex_t  mutex  ; 

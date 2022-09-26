@@ -11,12 +11,12 @@
 int 
 main ()  { 
      
-    ThreadContext th_ctx ; 
+    ThreadContext th_ctx ;
+
     initialize_thread_context_manager (&th_ctx) ; 
 
     ThreadManager  *tm1 =  create_new_thread_hdl()  ;
-    
-    ThreadManager  *tm2 = thread_link(tm1) ; 
+    ThreadManager  *tm2 =  thread_link(tm1) ; 
     
       
 #ifdef  THRD_HDL_STDIN  
@@ -40,14 +40,14 @@ main ()  {
      
 #ifdef  THRD_CLOCK_TIME
 
-   if (pthread_create (&tm1->thread_hdl  , (void *)0 , thrd_time_counter , (void *) 0) != 0 ) 
+   if (pthread_create (&tm1->thread_hdl  , (void *)0 , thrd_time_counter , &th_ctx) != 0 ) 
    {
        perror("thread counter  error") ; 
        exit(EXIT_FAILURE) ; 
    } 
    
 
-   if (pthread_create (&tm2->thread_hdl  , (void *)0 , thrd_reset ,  (void *) 0 ) !=0 ) 
+   if (pthread_create (&tm2->thread_hdl  , (void *)0 , thrd_reset ,  &th_ctx) !=0 ) 
    {
        perror("thread reset  error") ; 
        exit(EXIT_FAILURE) ; 
@@ -57,8 +57,9 @@ main ()  {
    pthread_join(tm2->thread_hdl , (void *)0) ; 
 
 #endif   
-     
 
-    return EXIT_SUCCESS ; 
+   free(tm1) ; free(tm2) ;  
+
+   return EXIT_SUCCESS ; 
 
 } 
