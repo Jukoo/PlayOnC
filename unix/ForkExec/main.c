@@ -4,7 +4,7 @@
 #include <errno.h>   
 #include <sys/wait.h> 
 
-#include  "include/fex.h"
+#include  "include/fork_and_execute.h"
 
 int
 main ( int argc , char **argv )  { 

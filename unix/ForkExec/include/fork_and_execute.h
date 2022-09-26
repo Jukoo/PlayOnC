@@ -1,5 +1,5 @@
-#ifndef  DUMPEXE 
-#define  DUMPEXE
+#ifndef  __fork_and_execute_binary_file
+#define  __fork_and_execute_binary_file
 
 #ifndef UBIN_PATH  
 #define UBIN_PATH  "/usr/bin/"   
