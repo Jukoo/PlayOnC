@@ -8,3 +8,4 @@ a.out
 .gdb_history
 libstring/*.o
 libstring/string
+unix/Semaphore/extracmd.txt
