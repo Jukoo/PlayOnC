@@ -50,6 +50,19 @@ struct sem_agent_t  * configure  ( struct  sem_agent_t * agent , uint * count_li
   return agent  ; 
 }
 
+
+struct __semphr_t *configure_sa (  struct __semphr_t  * restrict agent ,  uint * count_limit) 
+{
+  agent = malloc (sizeof(struct  sem_agent_t )) ;  
+ 
+  smphr_t  * b_agent = (smphr_t *)agent;   //((smphr_t*)agent)->index  = 3 ; 
+
+  configure ( (struct sem_agent_t *)b_agent , count_limit ) ; 
+
+  return agent ;  
+
+}
+
 void * count ( void * args  )  
 {
   smphr_t * count_h =  (struct sem_agent_t *)  args ;  
