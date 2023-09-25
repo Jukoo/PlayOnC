@@ -12,28 +12,34 @@
 #define  _nullable (void * )( 0U << 1 )  
 #define  _Nullable  _nullable  
 
-#define  LCOUNT_UNTIL 5  
+#define  LCOUNT_UNTIL 5 
+
+#ifdef NAMEDSMPR 
+#include <fcntl.h> 
+#include <sys/stat.h>  
+#define   NSF  "/temps" 
+#endif 
 
 typedef  unsigned int uint; 
 typedef  int (*smprh_end) (sem_t *) ; 
+typedef sem_t *  (*semop) (const char * , int , ... ) ; 
 
+typedef struct  __semphr_t  sema_t  ; 
 
 typedef  struct  sem_agent_t  smphr_t ; 
 struct sem_agent_t { 
   uint lm_counter ;
   uint index ; 
-  sem_t   smphr_h ;
+  sem_t   *smphr_h ;
 #ifndef  NAMEDSMPR
-  //! when you're not using  named semaphore 
   int (*smphr_init)  ( sem_t * , int , uint ) ;  
 #else  
-  sem_t *(*smphr_init) (const char * ,  int) ; 
+  semop smphr_init; 
 #endif
-  //! it  can be sem_destroy or sem_close  
   smprh_end smphr_terminate ;   
 } ; 
 
-/** @fn struct sem_agent_t * configure ( struct sem_agent_t *  , uint * ) 
+/** @fn struct sem_agent_t * configure ( struct sem_agent_t * , uint * ) 
  *  @brief configure or initialize sem_agent_t member 
  *  @param struct sem_agent_t * 
  *  @param uint aka unsigne int  limit count

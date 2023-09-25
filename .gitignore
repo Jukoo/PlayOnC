@@ -10,3 +10,4 @@ libstring/*.o
 libstring/string
 unix/Semaphore/extracmd.txt
 unix/Semaphore/build
+unix/Semaphore/*elf*
