@@ -3,6 +3,7 @@
  *  @author Umar Ba  , LoopFocus jUmarB@protonmail.com  
  */
 
+#include <semaphore.h>
 #include <stdlib.h> 
 #include <stdio.h> 
 #include <errno.h>
@@ -35,11 +36,11 @@ struct sem_agent_t  * configure  ( struct  sem_agent_t * agent , uint * count_li
   agent->smphr_init(&agent->smphr_h ,  0 ,  0) ; 
   if (errno !=0) errx(errno ,  "cannot configure agent") ;
   
-  agent->smphr_dist =  sem_destroy;
+  agent->smphr_terminate = sem_destroy; 
 #else  
   //! not supported yet 
   agent->smphr_init = sem_open ; 
-  agent->smphr_dist = sem_close ;
+  agent->smphr_terminate  = sem_close ;
 #endif
   
   return agent  ; 
@@ -71,7 +72,6 @@ void *reset ( void * args  )
   {
      sem_wait(&reset_h->smphr_h);  
      reset_h->index = 0 ;  
-
   }
 
   pthread_exit(_nullable);

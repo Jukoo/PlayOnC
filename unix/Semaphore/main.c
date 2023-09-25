@@ -24,7 +24,10 @@ main ()
   pthread_create (&thread_reset , _nullable , reset , &agent) ;
 
   pthread_join(thread_counter , _nullable) ; 
-  pthread_join(thread_reset , _nullable) ; 
+  pthread_join(thread_reset , _nullable) ;
+
+  
+  agent.smphr_terminate(&agent.smphr_h); 
 
 
   return EXIT_SUCCESS ; 

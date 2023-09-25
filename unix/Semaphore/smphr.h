@@ -15,6 +15,8 @@
 #define  LCOUNT_UNTIL 5  
 
 typedef  unsigned int uint; 
+typedef  int (*smprh_end) (sem_t *) ; 
+
 
 typedef  struct  sem_agent_t  smphr_t ; 
 struct sem_agent_t { 
@@ -24,11 +26,11 @@ struct sem_agent_t {
 #ifndef  NAMEDSMPR
   //! when you're not using  named semaphore 
   int (*smphr_init)  ( sem_t * , int , uint ) ;  
-  int (*smphr_dist)  ( sem_t * ) ; 
 #else  
   sem_t *(*smphr_init) (const char * ,  int) ; 
-  int (*smphr_dist)   (sem_t *) ;  
-#endif 
+#endif
+  //! it  can be sem_destroy or sem_close  
+  smprh_end smphr_terminate ;   
 } ; 
 
 /** @fn struct sem_agent_t * configure ( struct sem_agent_t *  , uint * ) 

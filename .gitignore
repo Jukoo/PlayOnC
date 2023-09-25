@@ -9,3 +9,4 @@ a.out
 libstring/*.o
 libstring/string
 unix/Semaphore/extracmd.txt
+unix/Semaphore/build
