@@ -1,124 +1,82 @@
-/* ipc  - inter process channel communication   
- * Copyright(c) , 2022 , Umar @OpenWire Lab 
- *  
+/** @file  ipc.c 
+ *  @brief Interprocess channel implemantation 
+ *  @author Umar Ba , LoopFocus Inc , jUmarB@protonmail.com
  */ 
+
+#include <stddef.h>
 #include <stdlib.h> 
 #include <stdio.h> 
+#include <string.h> 
+#include <err.h> 
 #include <unistd.h> 
-#include <errno.h>  
-#include <assert.h> 
-#include <signal.h>  
-#include <string.h>  
+
 #include <sys/types.h> 
-#include <sys/stat.h>  
+#include <sys/stat.h> 
 #include <fcntl.h> 
 
-
-#include "ipc.h"
-
-static void flushbuffer  ( char * string_buffer ) {   
-    memset ( string_buffer , 0 , IPC_MAXLMTBUFF) ; 
-} 
-
-Ipc_t * ipc_instanciate ( Ipc_t  *  ipc  )  {   
-    if  ( pipe(ipc->ipc_pipes)  == -1 )  
-    {
-        raise(SIGABRT) ;  
-    }
-    
-    ipc->ipc_fdw =  ipc->ipc_pipes[IPC_STDIN]  ; 
-    ipc->ipc_fdr =  ipc->ipc_pipes[IPC_STDOUT] ;  
-    
-    ipc->flush_imb = flushbuffer ;  
-    ipc->flush_imb(ipc->ipc_mesgbuff) ; 
-
-    return  ipc ; 
-}  
+#include "include/ipc.h" 
+ 
 
 
-Ipc_t *ipc_write ( Ipc_t  * ipc  , char  *restrict  mesg )  { 
-    IPC_CLOSE(ipc->ipc_fdr);  
-    ipc->flush_imb(ipc->ipc_mesgbuff); //! flush ipc buffer before   
-    
-    memcpy ( ipc->ipc_mesgbuff ,  mesg  , IPC_MAXLMTBUFF ) ; 
-    write(ipc->ipc_fdw  , ipc->ipc_mesgbuff ,  IPC_MAXLMTBUFF)  ;  
-    return ipc ; 
-} 
+struct __ipc_t *  init (struct __ipc_t *  ipc_ctrl)  
+{
 
-Ipc_t *ipc_read( Ipc_t * ipc , char * __holer)  {   
-    IPC_CLOSE(ipc->ipc_fdw) ;  
-    read(ipc->ipc_fdr , ipc->ipc_mesgbuff  ,  IPC_MAXLMTBUFF ) ;   
-    return  ipc ; 
+  
+  ipc_ctrl =   malloc(sizeof (struct _prochannel_t)) ; 
+
+  pchan_t *  ipc_channel = (struct _prochannel_t *) ipc_ctrl ; //  just to avoid this  ->  ((pchan_t *)ipc_ctrl)->attr  
+
+  ipc_channel->ipc_flush_buffer = bflush ; 
+  ipc_channel->ipc_flush_buffer (ipc_channel->buffer , _nullable );  
+
+#ifndef  IPC_FIFO  
+  if (pipe(ipc_channel->fid) <=~0 ) 
+    errx(IPC_ERRINIT , "ipc error : cannot create pipe") ;
+
+  ipc_channel->iofd.ipcrfd =ipc_channel->fid[IPC_STDOUT_FN] ;  
+  ipc_channel->iofd.ipcwfd =ipc_channel->fid[IPC_STDIN_FN]  ;  
+ 
+#else  
+  /** create  FIFO special file for named pipe */
+  if (mkfifo(IPC_FIFO_FILENAME , S_IWUSR|  S_IRUSR) <= ~0) 
+    errx(IPC_ERRFIFO , "ipc error : cannot make a FIFO special file (as named pipe)") ;  
+  
+#endif 
+ 
+  return  ipc_ctrl  ; 
 }
 
-static Bool  ae_fsfifo (char  *namedpipe )  {  
-  if  ( access(namedpipe  , F_OK )  != 0 )  
-  { 
-      return  false  ; 
-  }  
-  
-  return true  ; 
-} 
 
-Ipmc_t * fsfifo ( Ipmc_t * ipmc  , char *restrict  namedpipe  )  {  
-    
-   if (namedpipe != (void * ) 0 )  
-   {  
-       memcpy(ipmc->fnpipe  ,  namedpipe , 0xfe ) ;   
-   }else  
-       strcpy(ipmc->fnpipe , IPC_MKFIFO_FN) ;  
-   
-   if ( ae_fsfifo(ipmc->fnpipe) == true )  return   ipmc  ;   
-
-   if ( mkfifo (ipmc->fnpipe , S_IRWXU )  != 0 )  
-   {
-       perror ( "IPC Error :") ; 
-       return   ( void * ) 0 ; 
-   }
-
-   return ipmc ; 
-
+static   void bflush(char *restrict buffer ,  size_t  *_buffer_size )
+{
+  if  (_buffer_size == _void_0h) 
+    explicit_bzero(buffer,IPC_MAX_BUFFALWD); 
+  else 
+    explicit_bzero(buffer , *_buffer_size);
 }
 
-Ipmc_t*  readstream  ( Ipmc_t  * ipmc   )  {
+
+size_t ipc_io_operations(struct  __ipciofd * ipciofd , char *buffer, size_t  buffer_length,  int io_perform)  
+{
+
+  size_t  io_bytes ; 
+
+  switch (io_perform) {
   
-    ipmc->ipc->ipc_fdr =  open ( ipmc->fnpipe , O_RDONLY ) ; 
-    
-    int  fdr  = ipmc->ipc->ipc_fdr  ; 
-    if ( fdr   == -1 )  
-    {
-        perror ("Readstream Namedpide Error" ) ; 
-        exit(EXIT_FAILURE) ; 
-    }
-    
-    read(
-            fdr,
-            ipmc->ipc->ipc_mesgbuff ,
-            IPC_MAXLMTBUFF
-        ); 
-
-    close (fdr) ; 
-
-   return   ipmc ; 
-} 
-
-Ipmc_t * writestream( Ipmc_t *ipmc  , char *restrict  smthing ) {  
-    ipmc->ipc->ipc_fdw = open ( ipmc->fnpipe  , O_WRONLY) ;  
-    int fdw  = ipmc->ipc->ipc_fdw ;
-    
-    if  (fdw  == -1 ) 
-    {
-        perror ("Writestream Namedpide Error" ) ; 
-        exit(EXIT_FAILURE) ;  
-    }  
-    if (  smthing != ( void * ) 0) 
-    { 
-        memcpy  ( ipmc->ipc->ipc_mesgbuff , smthing ,  IPC_MAXLMTBUFF ) ; 
-    }
-
-    write (fdw ,  ipmc->ipc->ipc_mesgbuff , IPC_MAXLMTBUFF ) ; 
-
-   close (fdw);   
+    case IPC_WSTREAM   :
+      close(ipciofd->ipcrfd) ; 
+      io_bytes = write(ipciofd->ipcwfd,   buffer ,  buffer_length) ; 
+      break ; 
+  
+    case IPC_RSTREAM :
+      close(ipciofd->ipcwfd) ; 
+      io_bytes = read(ipciofd->ipcrfd ,  buffer ,  buffer_length) ; 
+      break ; 
+    default: 
+      errx(~io_bytes, "ipc io perform : no action taken ") ; 
+  }
    
-   return   ipmc ; 
+
+
+  return  io_bytes ; 
 }
