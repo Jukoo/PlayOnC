@@ -11,8 +11,9 @@
 #include <sys/types.h> 
 #include <string.h> 
 
+#include <fcntl.h> 
 
-#include "include/ipc.h" 
+#include "ipc.h" 
 
 int
 main(int _ac  , char ** _av) { 
@@ -28,8 +29,9 @@ main(int _ac  , char ** _av) {
   
   ipc_t *  ipc = init(_void_0h) ; 
 
-  if (ipc == _void_0h )  
-    raise(SIGABRT) ;   
+  if (ipc == _void_0h )  { 
+    errx(~1 ,  "cannot initialize  ipc ") ;
+  } 
 
 #ifndef  IPC_FIFO 
   pid_t   child_process = fork(); 
@@ -39,18 +41,21 @@ main(int _ac  , char ** _av) {
   if (child_process == IPC_CHILDP)  
   {  
     char cbuff[100] ={0} ; 
-    ipc_io_operations(&((struct _prochannel_t*)ipc)->iofd, cbuff,  100  , IPC_RSTREAM);  
-    printf("-> %s" , cbuff) ; 
+    ipc_io_operations(ipc ,  cbuff,  100  , IPC_RSTREAM);  
+    printf("message  from  father_procces <%i> : -> %s\n" , (int) getppid(),  cbuff) ; 
      
   }else 
   {
-    ipc_io_operations(&((struct _prochannel_t*)ipc)->iofd, mesg_echoing ,  strlen(mesg_echoing)  , IPC_WSTREAM);  
+    ipc_io_operations(ipc,  mesg_echoing ,  strlen(mesg_echoing)  , IPC_WSTREAM);  
   }
   
   wait(_nullable) ;
 #else  
   /** if you define IPC_FIFO*/ 
+  /**! this  file 'll be the iniator of named pipe */ 
   
+  ipc_io_operations(ipc ,  mesg_echoing ,  strlen(mesg_echoing) , IPC_WSTREAM) ; 
+
 
 #endif 
 
